@@ -15,7 +15,9 @@ module Spree
     def self.download(report, options = {})
       headers = report.headers
       stats = report.observations
-      ::CSV.generate(options) do |csv|
+
+      # make downloadable reports compatible with ruby 3
+      ::CSV.generate(nil, **options) do |csv|
         csv << headers.map { |head| head[:name] }
         stats.each do |record|
           csv << headers.map { |head| record.public_send(head[:value]) }
